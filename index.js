@@ -1,9 +1,11 @@
 const express = require('express');
+const cors = require('cors'); // 👈 nuevo
 const db = require('./db');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.use(cors()); // 👈 habilita CORS para todas las rutas
 app.use(express.json());
 
 app.get('/ping', (req, res) => {
@@ -29,7 +31,6 @@ app.post('/usuarios', async (req, res) => {
   }
 });
 
-// ✅ Esta línea debe estar **solo una vez**
 app.listen(port, () => {
   console.log(`Servidor escuchando en el puerto ${port}`);
 });
