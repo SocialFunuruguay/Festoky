@@ -10,10 +10,6 @@ app.get('/ping', (req, res) => {
   res.json({ message: 'MarketFest backend activo' });
 });
 
-app.listen(port, () => {
-  console.log(`Servidor escuchando en el puerto ${port}`);
-});
-
 app.post('/usuarios', async (req, res) => {
   const { nombre, email } = req.body;
 
@@ -33,8 +29,7 @@ app.post('/usuarios', async (req, res) => {
   }
 });
 
-
-// ✅ ¡Esto siempre va al final!
+// ✅ Esta línea debe estar **solo una vez**
 app.listen(port, () => {
   console.log(`Servidor escuchando en el puerto ${port}`);
 });
