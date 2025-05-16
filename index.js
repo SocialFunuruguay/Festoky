@@ -1,5 +1,6 @@
-const db = require('./db');
 const express = require('express');
+const db = require('./db');
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -7,6 +8,10 @@ app.use(express.json());
 
 app.get('/ping', (req, res) => {
   res.json({ message: 'MarketFest backend activo' });
+});
+
+app.listen(port, () => {
+  console.log(`Servidor escuchando en el puerto ${port}`);
 });
 
 app.post('/usuarios', async (req, res) => {
@@ -27,6 +32,7 @@ app.post('/usuarios', async (req, res) => {
     res.status(500).json({ error: 'No se pudo crear el usuario' });
   }
 });
+
 
 // ✅ ¡Esto siempre va al final!
 app.listen(port, () => {
