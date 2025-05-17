@@ -10,8 +10,42 @@ app.use(express.json());
 
 // 🔄 RUTAS
 
+
+
 app.get('/ping', (req, res) => {
   res.json({ message: 'MarketFest backend activo' });
+});
+
+// autenticación basada en tokens
+
+const jwt = require('jsonwebtoken');
+
+const SECRET = 'tu_clave_secreta_segura'; // luego lo pondremos en una variable de entorno
+
+app.post('/login', async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const result = await db.query('SELECT * FROM usuarios WHERE email = $1', [email]);
+
+    if (result.rows.length === 0) {
+      return res.status(401).json({ error: 'Credenciales inválidas' });
+    }
+
+    const usuario = result.rows[0];
+
+    // Crear el token
+    const token = jwt.sign(
+      { id: usuario.id, email: usuario.email },
+      SECRET,
+      { expiresIn: '1h' }
+    );
+
+    res.json({ token });
+  } catch (error) {
+    console.error('Error en login:', error);
+    res.status(500).json({ error: 'Error interno en login' });
+  }
 });
 
 // POST - Crear usuario
