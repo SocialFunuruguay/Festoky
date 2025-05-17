@@ -15,6 +15,18 @@ app.use(express.json());
 app.get('/ping', (req, res) => {
   res.json({ message: 'MarketFest backend activo' });
 });
+function verificarToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]; // Bearer token
+
+  if (!token) return res.status(401).json({ error: 'Token faltante' });
+
+  jwt.verify(token, SECRET, (err, usuario) => {
+    if (err) return res.status(403).json({ error: 'Token inválido o expirado' });
+    req.usuario = usuario;
+    next();
+  });
+}
 
 // autenticación basada en tokens
 
@@ -69,7 +81,7 @@ app.post('/usuarios', async (req, res) => {
 });
 
 // GET - Todos los usuarios
-app.get('/usuarios', async (req, res) => {
+app.get('/usuarios', verificarToken, async (req, res) => {
   try {
     const result = await db.query('SELECT * FROM usuarios');
     res.json(result.rows);
