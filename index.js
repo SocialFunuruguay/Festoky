@@ -18,6 +18,15 @@ app.post('/usuarios', async (req, res) => {
   if (!nombre || !email) {
     return res.status(400).json({ error: 'Faltan datos: nombre o email' });
   }
+app.get('/usuarios', async (req, res) => {
+  try {
+    const result = await db.query('SELECT * FROM usuarios ORDER BY id ASC');
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error('Error al obtener usuarios:', error);
+    res.status(500).json({ error: 'No se pudieron obtener los usuarios' });
+  }
+});
 
   try {
     const result = await db.query(
